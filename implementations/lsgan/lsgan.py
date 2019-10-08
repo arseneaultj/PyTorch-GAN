@@ -115,19 +115,32 @@ generator.apply(weights_init_normal)
 discriminator.apply(weights_init_normal)
 
 # Configure data loader
-os.makedirs("../../data/mnist", exist_ok=True)
+os.makedirs("./data/", exist_ok=True)
+
+dset = datasets.ImageFolder(root='E:\projects\BigGAN-pytorch\data',
+                            transform=transforms.Compose([
+                               transforms.Grayscale(),
+                               transforms.Resize(opt.img_size),
+                               transforms.ToTensor(),
+                               # transforms.Normalize([0.5, 0.5], [0.5, 0.50])
+                               ]))
 dataloader = torch.utils.data.DataLoader(
-    datasets.MNIST(
-        "../../data/mnist",
-        train=True,
-        download=True,
-        transform=transforms.Compose(
-            [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
-        ),
-    ),
+    dataset=dset,
     batch_size=opt.batch_size,
-    shuffle=True,
+    shuffle=True
 )
+# dataloader = torch.utils.data.DataLoader(
+#     datasets.MNIST(
+#         "../../data/mnist",
+#         train=True,
+#         download=True,
+#         transform=transforms.Compose(
+#             [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+#         ),
+#     ),
+#     batch_size=opt.batch_size,
+#     shuffle=True,
+# )
 
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
